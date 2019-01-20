@@ -1,0 +1,23 @@
+{
+  "name": "billing-tree-soap",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "contributors": [
+    "Jared Cuffe",
+    "Daniel Chamorro" 
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "next": "^7.0.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "soap": "^0.25.0"
+  }
+}
