@@ -6,8 +6,7 @@ const wsdl = "https://sandbox.usaepay.com/soap/gate/E101690F/usaepay.wsdl";
 const getSoapClient = async () => soap.createClientAsync(wsdl);
 
 const runTransaction = (client, body) => {
-  const cardExp =
-    body["Card Expiration Month"] + body["Card Expiration Year"].slice(2);
+  const cardExp = body["Expiration Month"] + body["Expiration Year"].slice(2);
   const args = {
     Token: generateToken(),
     Parameters: {
@@ -24,8 +23,8 @@ const runTransaction = (client, body) => {
         CardExpiration: cardExp
       },
       BillingAddress: {
-        Street: body["Card Address"],
-        Zip: body["Card Zip Code"]
+        Street: body["Address"],
+        Zip: body["Zip Code"]
       }
     }
   };
