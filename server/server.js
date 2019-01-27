@@ -25,49 +25,51 @@ server.get("/payments", async (req, res) => {
       "id",
       "debtorname as Debtor Name",
       "cardnumber as Card Number",
-      "cardexpirationmonth as Card Expiration Month",
-      "cardexpirationyear as Card Expiration Year",
-      "cardaddress as Card Address",
-      "cardzipcode as Card Zip Code"
+      "cardexpirationmonth as Expiration Month",
+      "cardexpirationyear as Expiration Year",
+      "cardaddress as Address",
+      "cardzipcode as Zip Code"
     );
 
   // Find payments with entries in the processed database
-  const processed = payments.map(payment =>
-    processedPayments("payments")
-      .where(payment)
-      .first()
-  );
+  const processed = (await Promise.all(
+    payments.map(({ id }) =>
+      processedPayments("payments")
+        .where({ id })
+        .first()
+    )
+  )).filter(payment => payment);
+
+  console.log(`> ${processed.length} entries already processed, ignoring`);
 
   // Convert sparse array to hash table for faster comparisons
   const hashed = {};
-  (await Promise.all(processed))
-    .filter(payment => payment)
-    .forEach(payment => (hashed[payment.id] = payment));
+  processed.forEach(payment => (hashed[payment.id] = payment));
 
   // Remove processed transactions from rows
-  const rows = payments.filter(payment => hashed[payment.id]);
+  const rows = payments.filter(payment => !hashed[payment.id]);
 
   res.json({ rows });
 });
 
 server.post("/process", async (req, res) => {
   const client = await getSoapClient();
-  const result = await runTransaction(client, req.body);
-  console.log(result);
+  const txs = req.body;
+  const results = await Promise.all(txs.map(tx => runTransaction(client, tx)));
   // TODO check result for success
-  if (result) {
-    const id = await processedPayments("payments").insert(req.body);
+  txs.forEach(async tx => {
+    const id = await processedPayments("payments").insert(tx);
     console.log(`Processed ${id}`);
-    return res.json({ success: "success" });
-  }
-  res.json({ err: "failed to process" });
+  });
+  return res.json({ success: "success" });
 });
 
 server.get("*", (req, res) => {
   res.send("Hola");
 });
 
-server.listen(5000, err => {
+const port = process.env.PORT || 5000;
+server.listen(port, err => {
   if (err) throw err;
-  console.log(`> Ready on http://localhost:${5000}`);
+  console.log(`> Listening on ${port}`);
 });
