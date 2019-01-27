@@ -1,0 +1,25 @@
+{
+  "name": "billing-tree-soap",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "contributors": [
+    "Jared Cuffe",
+    "Daniel Chamorro"
+  ],
+  "license": "ISC",
+  "scripts": {
+    "dev": "node server.js",
+    "server": "NODE_ENV=production node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "mysql": "^2.16.0",
+    "soap": "^0.25.0"
+  },
+  "devDependencies": {
+    "dotenv": "^6.2.0"
+  }
+}
