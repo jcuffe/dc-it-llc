@@ -1,14 +1,14 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
+import { Grid } from "@material-ui/core";
+import { Store } from "../state/store";
 import CSG from "./csg";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <CSG />
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <Grid container justify="center">
+      <CSG />
+    </Grid>
+  );
+};
 
 export default App;
