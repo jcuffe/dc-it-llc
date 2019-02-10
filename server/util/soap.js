@@ -13,14 +13,15 @@ const runTransaction = (client, body) => {
       Command: "sale",
       AccountHolder: body["Debtor Name"],
       Details: {
-        OrderID: Date.now(),
-        Description: "a test",
-        Amount: 1,
+        OrderID: body["id"],
+        Description: "Collected payment",
+        Amount: body["Amount"],
         Currency: "USD"
       },
       CreditCardData: {
         CardNumber: body["Card Number"],
-        CardExpiration: cardExp
+        CardExpiration: cardExp,
+        CardCode: body["CVV"]
       },
       BillingAddress: {
         Street: body["Address"],
