@@ -49,6 +49,21 @@ server.get("/payments", async (req, res) => {
   res.json({ rows });
 });
 
+server.get("/processed", async (req, res) => {
+  const processed = await collections("payments")
+    .join("processed", {
+      "payments.id": "processed.id"
+    })
+    .select(
+      "payments.debtorname as Debtor Name",
+      "payments.filenumber as FileNo",
+      "processed.refnum as ReferenceNo",
+      "processed.timestamp as Timestamp"
+    );
+  console.log(processed);
+  res.json({ rows: processed });
+});
+
 server.post("/process", async (req, res) => {
   const client = await getSoapClient();
   const txs = req.body;
