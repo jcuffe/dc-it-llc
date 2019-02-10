@@ -56,12 +56,33 @@ server.post("/process", async (req, res) => {
   const client = await getSoapClient();
   const txs = req.body;
   const results = await Promise.all(txs.map(tx => runTransaction(client, tx)));
-  // TODO check result for success
-  txs.forEach(async tx => {
-    const id = await processedPayments("payments").insert(tx);
-    console.log(`Processed ${id}`);
+  const responses = [];
+  txs.forEach(async (tx, i) => {
+    const result = results[i].Result.$value;
+    if (result === "Approved") {
+      const refnum = results[i].RefNum.$value;
+      console.log(result, tx.id);
+      responses.push({
+        id: tx.id,
+        "Debtor Name": tx["Debtor Name"],
+        Result: result,
+        ReferenceNo: refnum
+      });
+      const id = await collections("processed")
+        .insert({ id: tx.id, refnum })
+        .returning("refnum");
+      console.log(`Processed ${tx.id}`);
+    } else {
+      const error = results[i].Error.$value;
+      responses.push({
+        id: tx.id,
+        "Debtor Name": tx["Debtor Name"],
+        Result: error,
+        ReferenceNo: null
+      });
+    }
   });
-  return res.json({ success: "success" });
+  return res.json(responses);
 });
 
 server.get("*", (req, res) => {
