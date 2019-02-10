@@ -16,3 +16,10 @@
 
 - Date processed
 - Error status
+
+##Next steps
+
+- BillingTree response on state for review every time user sends transactions
+- Display processed transactions with relevant details to allow client to mark as paid in CollectionsMax
+  - Fields: File Number, Full Name, Timestamp, BillingTree Refnumber
+  - Filter by date with date range picker
