@@ -10,14 +10,4 @@ const collections = knex({
   }
 });
 
-const processedPayments = knex({
-  client: "mysql",
-  connection: {
-    host: "127.0.0.1",
-    user: "root",
-    password: "Enterprise1",
-    database: "dc-it-llc"
-  }
-});
-
-module.exports = { collections, processedPayments };
+module.exports = { collections };
