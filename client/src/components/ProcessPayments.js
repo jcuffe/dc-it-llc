@@ -27,7 +27,7 @@ const fetchRows = async dispatch => {
   );
 
   const columns = Object.keys(data.rows[0]).map((key, i) => {
-    const widths = [100, 300, 200, 180, 160, 200, 130];
+    const widths = [100, 100, 300, 200, 180, 160, 100, 200, 130, 100];
     return {
       width: widths[i],
       label: key,
@@ -40,16 +40,21 @@ const fetchRows = async dispatch => {
 };
 
 const sendTransactions = async transactions => {
+  console.log("sending:");
+  console.log(transactions);
   const { data } = await axios.post(
     process.env.REACT_APP_BACKEND_URL + "/process",
     transactions
   );
   console.log(data);
+  return data;
 };
 
 const CSG = () => {
   const { state, dispatch } = useContext(Store);
   console.log(state);
+
+  // Move a row into the processing queue
   const onRowClick = ({ index, rowData }) => {
     const { selectedRows, rows, filteredRows } = state;
     selectedRows.push(rowData);
@@ -57,59 +62,64 @@ const CSG = () => {
     rows.splice(spliceIndex, 1);
     dispatch({ selectedRows, rows });
   };
-  const onSendTransactions = () => {
-    sendTransactions(state.selected_rows);
-    dispatch({ selectedRows: [] });
+
+  // Send transactions to BillingTree
+  const onSendTransactions = async () => {
+    const billingTreeRows = await sendTransactions(state.selectedRows);
+    dispatch({ selectedRows: [], billingTreeRows });
   };
-  useEffect(
-    () => {
-      fetchRows(dispatch);
-    },
-    [true]
-  );
-  useEffect(
-    () => {
-      console.log("TRIGGERED");
-      const { filterText, filterBy, rows } = state;
-      if (filterText !== "") {
-        const filteredRows = rows.filter(row =>
-          row[filterBy].toLowerCase().includes(filterText.toLowerCase())
-        );
-        dispatch({ filteredRows });
-      } else {
-        dispatch({ filteredRows: rows });
-      }
-    },
-    [state.rows.length, state.filterText]
-  );
+
+  // Initial row fetch
+  useEffect(() => {
+    fetchRows(dispatch);
+  }, [true]);
+
+  // Apply filter query to row data
+  useEffect(() => {
+    console.log("TRIGGERED");
+    const { filterText, filterBy, rows } = state;
+    if (filterText !== "") {
+      const filteredRows = rows.filter(row =>
+        row[filterBy]
+          .toString()
+          .toLowerCase()
+          .includes(filterText.toLowerCase())
+      );
+      dispatch({ filteredRows });
+    } else {
+      dispatch({ filteredRows: rows });
+    }
+  }, [state.rows.length, state.filterText]);
 
   return (
-    <Grid item>
-      <Typography gutterBottom variant="headline" align="center">
-        Transactions to process
-      </Typography>
-      <Paper style={paperStyle}>
-        <DataTable columns={state.columns} rows={state.selectedRows} />
-      </Paper>
-      <Toolbar>
-        <Button onClick={onSendTransactions} variant="contained">
-          Send Selected Transactions
-        </Button>
-        <FormGroup row>
-          <FilterSelect />
-          <FilterInput />
-        </FormGroup>
-      </Toolbar>
-      <Typography gutterBottom variant="headline" align="center">
-        Unprocessed Transactions
-      </Typography>
-      <Paper style={paperStyle}>
-        <DataTable
-          columns={state.columns}
-          rows={state.filteredRows}
-          onRowClick={onRowClick}
-        />
-      </Paper>
+    <Grid container justify="center">
+      <Grid item>
+        <Typography gutterBottom variant="headline" align="center">
+          Transactions to process
+        </Typography>
+        <Paper style={paperStyle}>
+          <DataTable columns={state.columns} rows={state.selectedRows} />
+        </Paper>
+        <Toolbar>
+          <Button onClick={onSendTransactions} variant="contained">
+            Send Selected Transactions
+          </Button>
+          <FormGroup row>
+            <FilterSelect />
+            <FilterInput />
+          </FormGroup>
+        </Toolbar>
+        <Typography gutterBottom variant="headline" align="center">
+          Unprocessed Transactions
+        </Typography>
+        <Paper style={paperStyle}>
+          <DataTable
+            columns={state.columns}
+            rows={state.filteredRows}
+            onRowClick={onRowClick}
+          />
+        </Paper>
+      </Grid>
     </Grid>
   );
 };
@@ -119,14 +129,11 @@ const FilterSelect = () => {
   const [labelWidth, setLabelWidth] = useState(0);
   let labelRef;
   const handleChange = e => dispatch({ filterBy: e.target.value });
-  useEffect(
-    () => {
-      if (labelRef) {
-        setLabelWidth(ReactDOM.findDOMNode(labelRef).offsetWidth);
-      }
-    },
-    [labelRef]
-  );
+  useEffect(() => {
+    if (labelRef) {
+      setLabelWidth(ReactDOM.findDOMNode(labelRef).offsetWidth);
+    }
+  }, [labelRef]);
   return (
     <FormControl variant="outlined" style={{ minWidth: 180, margin: 16 }}>
       <InputLabel ref={ref => (labelRef = ref)}>Filter by</InputLabel>
