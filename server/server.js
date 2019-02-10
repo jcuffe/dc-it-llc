@@ -23,28 +23,25 @@ server.get("/payments", async (req, res) => {
     .where({ paymentstatus: "PENDING" })
     .select(
       "id",
+      "filenumber as FileNo",
       "debtorname as Debtor Name",
       "cardnumber as Card Number",
       "cardexpirationmonth as Expiration Month",
       "cardexpirationyear as Expiration Year",
+      "threedigitnumber as CVV",
       "cardaddress as Address",
-      "cardzipcode as Zip Code"
+      "cardzipcode as Zip Code",
+      "paymentamount as Amount"
     );
 
   // Find payments with entries in the processed database
-  const processed = (await Promise.all(
-    payments.map(({ id }) =>
-      processedPayments("payments")
-        .where({ id })
-        .first()
-    )
-  )).filter(payment => payment);
-
-  console.log(`> ${processed.length} entries already processed, ignoring`);
+  const processed = await collections("processed").select("id");
 
   // Convert sparse array to hash table for faster comparisons
   const hashed = {};
   processed.forEach(payment => (hashed[payment.id] = payment));
+  console.log("duplicates");
+  console.log(hashed);
 
   // Remove processed transactions from rows
   const rows = payments.filter(payment => !hashed[payment.id]);
