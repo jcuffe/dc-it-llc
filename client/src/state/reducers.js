@@ -1,9 +1,14 @@
 export const initialState = {
   theme: null,
   rows: [],
+  processed: {
+    rows: [],
+    columns: [],
+    filteredRows: [],
+    startDate: null,
+    endDate: null
+  },
   billingTreeRows: [],
-  processedRows: [],
-  processedColumns: [],
   filteredRows: [],
   selectedRows: [],
   columns: [],
