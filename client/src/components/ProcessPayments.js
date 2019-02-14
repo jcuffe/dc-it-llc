@@ -65,8 +65,8 @@ const CSG = () => {
 
   // Send transactions to BillingTree
   const onSendTransactions = async () => {
-    const billingTreeRows = await sendTransactions(state.selectedRows);
-    dispatch({ selectedRows: [], billingTreeRows });
+    const rows = await sendTransactions(state.selectedRows);
+    dispatch({ selectedRows: [], billingTree: { rows } });
   };
 
   // Initial row fetch

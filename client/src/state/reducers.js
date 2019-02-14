@@ -8,7 +8,9 @@ export const initialState = {
     startDate: null,
     endDate: null
   },
-  billingTreeRows: [],
+  billingTree: {
+    rows: []
+  },
   filteredRows: [],
   selectedRows: [],
   columns: [],

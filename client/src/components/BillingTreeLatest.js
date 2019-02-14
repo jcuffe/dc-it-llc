@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
 import { Paper, Grid, Typography } from "@material-ui/core";
 import { Store } from "../state/store";
 import DataTable from "./DataTable";
@@ -9,8 +8,8 @@ const paperStyle = { height: "80vh", width: 1270, paddingTop: 10 };
 const BillingTreeLatest = () => {
   const { state, dispatch } = useContext(Store);
   let columns, rows;
-  if (state.billingTreeRows.length) {
-    rows = state.billingTreeRows;
+  if (state.billingTree.rows.length) {
+    rows = state.billingTree.rows;
     columns = Object.keys(rows[0]).map((key, i) => {
       const widths = [200, 350, 420, 300];
       return {
