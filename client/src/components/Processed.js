@@ -14,6 +14,11 @@ const fetchRows = async dispatch => {
     data: { rows }
   } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/processed");
 
+  rows.forEach(
+    row =>
+      (row.Timestamp = moment(row.Timestamp).format("MMMM Do YYYY, h:mm:ss a"))
+  );
+
   const columns = Object.keys(rows[0]).map((key, i) => {
     const widths = [400, 200, 200, 200];
     return {
@@ -29,8 +34,8 @@ const fetchRows = async dispatch => {
       rows,
       columns,
       filteredRows: [],
-      startDate: null,
-      endDate: null
+      startDate: moment().startOf("day"),
+      endDate: moment().endOf("day")
     }
   });
 };
@@ -50,10 +55,17 @@ const Processed = () => {
   useEffect(() => {
     const { rows, startDate, endDate } = processed;
     if (startDate && endDate) {
-      console.log("filtering");
-      const filteredRows = rows.filter(row =>
-        moment(row[3]).isBetween(startDate, endDate)
-      );
+      let start = moment(startDate);
+      let end = moment(endDate);
+      if (start.isSame(end)) {
+        start = start.subtract(24, "hours");
+      }
+      const filteredRows = rows.filter(row => {
+        const date = moment(row.Timestamp, "MMMM Do YYYY, h:mm:ss a");
+        if (moment(date).isBetween(start, end)) {
+          return true;
+        }
+      });
       dispatch({ processed: { ...processed, filteredRows } });
     } else {
       dispatch({ processed: { ...processed, filteredRows: rows } });
