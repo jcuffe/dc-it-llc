@@ -16,8 +16,11 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "knex": "^0.16.3",
+    "moment": "^2.24.0",
     "mysql": "^2.16.0",
-    "soap": "^0.25.0"
+    "objects-to-csv": "^1.2.1",
+    "soap": "^0.25.0",
+    "ssh2-sftp-client": "^2.4.3"
   },
   "devDependencies": {
     "dotenv": "^6.2.0"
