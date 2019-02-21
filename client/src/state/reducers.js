@@ -1,6 +1,10 @@
 export const initialState = {
   theme: null,
   rows: [],
+  customer: {
+    rows: [],
+    columns: []
+  },
   processed: {
     rows: [],
     columns: [],
