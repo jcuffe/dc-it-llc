@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import ProcessPayments from "./ProcessPayments";
 import Processed from "./Processed";
 import BillingTreeLatest from "./BillingTreeLatest";
+import CsvExport from './CsvExport';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route exact path="/" component={ProcessPayments} />
         <Route path="/processed" component={Processed} />
         <Route path="/latest-response" component={BillingTreeLatest} />
+        <Route path="/csv-export" component={CsvExport} />
       </Switch>
     </div>
   );

@@ -40,6 +40,11 @@ const Navbar = ({ classes }) => (
           Latest BillingTree Response
         </Link>
       </Typography>
+      <Typography variant="h6">
+        <Link to="/csv-export" className={classes.navItem}>
+          Export Customer Data
+        </Link>
+      </Typography>
     </Toolbar>
   </AppBar>
 );
