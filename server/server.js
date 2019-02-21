@@ -5,8 +5,11 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const cors = require("./util/cors");
-const { collections, processedPayments } = require("./util/knex");
+const { collections } = require("./util/knex");
 const { getSoapClient, DCITReport, runTransaction } = require("./util/soap");
+const sftp = require("./util/sftp");
+const o2csv = require("objects-to-csv");
+const moment = require("moment");
 
 server = express();
 server.use(cors());
@@ -16,6 +19,48 @@ server.get("/dcit", async (req, res) => {
   const client = await getSoapClient();
   dcit = await DCITReport(client);
   res.json(dcit);
+});
+
+const fetchCustomerData = async () => {
+  const rows = await collections("dbase")
+    .join("payments", "dbase.filenumber", "=", "payments.filenumber")
+    .where("cellphone", "!=", "")
+    .select(
+      "dbase.id",
+      "dbase.accountnumber",
+      "dbase.socialsecuritynumber as SSN",
+      "firstname",
+      "lastname",
+      "state",
+      "zip",
+      "lastpaymentamount",
+      "currentbalance",
+      "paymentdate",
+      "cellphone",
+      "paymentstatus",
+    );
+  return rows;
+}
+
+server.get("/customers", async (req, res) => {
+  const rows = await fetchCustomerData();
+  console.log(rows);
+  res.json({ rows });
+});
+
+server.post("/csv-export", async (req, res) => {
+  const rows = await fetchCustomerData();
+  csv = new o2csv(rows);
+  csv.toString().then(str => {
+    const dateStr = moment().format("YYYY-MM-DD");
+    const path = `${process.env.FTP_ROOT}/DLC UPLOAD ${dateStr}.csv`;
+    sftp.connect()
+      .then(() => { return sftp.put(new Buffer(str), path) })
+      .then(data => console.log(data))
+      .then(() => res.status(200).json({
+        message: `Successfully sent ${rows.length} records.`
+      }));
+  });
 });
 
 server.get("/payments", async (req, res) => {
