@@ -1,4 +1,5 @@
 export const initialState = {
+  username: null,
   theme: null,
   rows: [],
   customer: {
