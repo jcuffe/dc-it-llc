@@ -25,7 +25,6 @@ const create = async (username, password) => {
 };
 
 const findById = async id => {
-  console.log(id, typeof id);
   try {
     const user = await db("users")
       .where({ id })
