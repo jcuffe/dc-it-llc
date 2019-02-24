@@ -1,7 +1,9 @@
 const cors = require("cors");
 
-var corsOptions = {
-  origin: "http://localhost:3000"
+var config = {
+  origin: "http://localhost:3000",
+  method: ["GET", "POST"],
+  credentials: true
 };
 
-module.exports = () => cors(corsOptions);
+module.exports = cors(config);
