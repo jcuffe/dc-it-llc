@@ -1,7 +1,7 @@
 const cors = require("cors");
 
 var config = {
-  origin: "http://localhost:3000",
+  origin: process.env.FRONTEND_URL,
   method: ["GET", "POST"],
   credentials: true
 };
