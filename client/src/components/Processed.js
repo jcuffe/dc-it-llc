@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import { Paper, Grid, Typography } from "@material-ui/core";
@@ -62,9 +62,7 @@ const Processed = () => {
       }
       const filteredRows = rows.filter(row => {
         const date = moment(row.Timestamp, "MMMM Do YYYY, h:mm:ss a");
-        if (moment(date).isBetween(start, end)) {
-          return true;
-        }
+        return moment(date).isBetween(start, end);
       });
       dispatch({ processed: { ...processed, filteredRows } });
     } else {

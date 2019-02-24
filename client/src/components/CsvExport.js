@@ -1,10 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Paper, Grid, Typography, Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import { Store } from "../state/store";
 import axios from "axios";
 import DataTable from "./DataTable";
 
-const paperStyle = { height: "80vh", width: 1625, paddingTop: 10 };
+const styles = {
+  paper: {
+    height: "80vh",
+    width: 1625,
+    paddingTop: 10
+  },
+  button: {
+    marginLeft: "1rem"
+  }
+};
 
 const fetchRows = async dispatch => {
   console.log("Fetching rows");
@@ -30,7 +40,7 @@ const fetchRows = async dispatch => {
   });
 };
 
-const CsvExport = () => {
+const CsvExport = ({ classes }) => {
   const { state, dispatch } = useContext(Store);
   let { columns, rows } = state.customer;
 
@@ -39,16 +49,23 @@ const CsvExport = () => {
   }, [true]);
 
   const exportCsv = () => {
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/csv-export")
-  }
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/csv-export");
+  };
 
   return (
     <Grid container justify="center">
       <Grid item>
         <Typography gutterBottom variant="headline" align="center">
-          Export Customer Data <Button onClick={exportCsv}>Export</Button>
+          Export Customer Data{" "}
+          <Button
+            className={classes.button}
+            variant="contained"
+            onClick={exportCsv}
+          >
+            Export
+          </Button>
         </Typography>
-        <Paper style={paperStyle}>
+        <Paper className={classes.paper}>
           <DataTable columns={columns} rows={rows} onRowClick={null} />
         </Paper>
       </Grid>
@@ -56,4 +73,4 @@ const CsvExport = () => {
   );
 };
 
-export default CsvExport;
+export default withStyles(styles)(CsvExport);

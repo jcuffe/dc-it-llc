@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Paper, Grid, Typography } from "@material-ui/core";
 import { Store } from "../state/store";
 import DataTable from "./DataTable";
@@ -6,7 +6,7 @@ import DataTable from "./DataTable";
 const paperStyle = { height: "80vh", width: 1270, paddingTop: 10 };
 
 const BillingTreeLatest = () => {
-  const { state, dispatch } = useContext(Store);
+  const { state } = useContext(Store);
   let columns, rows;
   if (state.billingTree.rows.length) {
     rows = state.billingTree.rows;

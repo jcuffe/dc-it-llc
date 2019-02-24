@@ -18,10 +18,9 @@ import {
 import { Store } from "../state/store";
 import DataTable from "./DataTable";
 
-const paperStyle = { height: "40vh", width: 1270, paddingTop: 10 };
+const paperStyle = { height: "35vh", width: 1270, paddingTop: 10 };
 
 const fetchRows = async dispatch => {
-  console.log("Fetching rows");
   const { data } = await axios.get(
     process.env.REACT_APP_BACKEND_URL + "/payments"
   );
@@ -40,19 +39,15 @@ const fetchRows = async dispatch => {
 };
 
 const sendTransactions = async transactions => {
-  console.log("sending:");
-  console.log(transactions);
   const { data } = await axios.post(
     process.env.REACT_APP_BACKEND_URL + "/process",
     transactions
   );
-  console.log(data);
   return data;
 };
 
 const CSG = () => {
   const { state, dispatch } = useContext(Store);
-  console.log(state);
 
   // Move a row into the processing queue
   const onRowClick = ({ index, rowData }) => {
@@ -76,7 +71,6 @@ const CSG = () => {
 
   // Apply filter query to row data
   useEffect(() => {
-    console.log("TRIGGERED");
     const { filterText, filterBy, rows } = state;
     if (filterText !== "") {
       const filteredRows = rows.filter(row =>
