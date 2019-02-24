@@ -7,6 +7,9 @@
     "Jared Cuffe",
     "Daniel Chamorro"
   ],
+  "engines": {
+    "node": "11.10.0"
+  },
   "license": "ISC",
   "scripts": {
     "dev": "node server.js",
