@@ -1,6 +1,6 @@
 const knex = require("knex");
 
-const collections = knex({
+const db = knex({
   client: "mysql",
   connection: {
     host: "72.52.128.231",
@@ -10,4 +10,4 @@ const collections = knex({
   }
 });
 
-module.exports = { collections };
+module.exports = db;
