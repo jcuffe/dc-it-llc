@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const db = require("./util/knex");
 const { getSoapClient, DCITReport, batchTransactions } = require("./util/soap");
-const sftp = require("./util/sftp");
+const { sftp, sftpOptions } = require("./util/sftp");
 const o2csv = require("objects-to-csv");
 const moment = require("moment");
 const cors = require("./util/cors");
@@ -49,17 +49,16 @@ server.post("/csv-export", async (req, res) => {
   csv.toString().then(str => {
     const dateStr = moment().format("YYYY-MM-DD");
     const path = `${process.env.FTP_ROOT}/DLC UPLOAD ${dateStr}.csv`;
-    sftp
-      .connect()
-      .then(() => {
-        return sftp.put(new Buffer(str), path);
-      })
-      .then(data => console.log(data))
-      .then(() =>
-        res.status(200).json({
-          message: `Successfully sent ${rows.length} records.`
-        })
-      );
+    const client = sftp()
+    client
+      .connect(sftpOptions)
+      .then(() => client.put(Buffer.from(str), path))
+      .then(() => client.end())
+      .then(() => res.json({ success: "Successfully exported CSV data" }))
+      .catch((err) => {
+        client.end();
+        res.json({ error: "Failed to export. Wait a moment and try again.", err })
+      });
   });
 });
 

@@ -1,7 +1,8 @@
 const Client = require("ssh2-sftp-client");
-const sftp = new Client();
 
-const options = {
+const sftp = () => new Client();
+
+const sftpOptions = {
   host: process.env.FTP_HOST,
   port: 22,
   username: process.env.FTP_USER,
@@ -20,9 +21,4 @@ const options = {
   }
 };
 
-sftp._connect = sftp.connect;
-sftp.connect = function() {
-  return this._connect(options);
-};
-
-module.exports = sftp;
+module.exports = { sftp, sftpOptions };
