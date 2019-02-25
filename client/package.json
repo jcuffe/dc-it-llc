@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.1",
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
     "moment": "^2.24.0",
     "react": "^16.8.0-alpha.1",
     "react-bootstrap-table-next": "^2.1.0",

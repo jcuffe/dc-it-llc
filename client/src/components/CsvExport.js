@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Paper, Grid, Typography, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { Store } from "../state/store";
 import axios from "axios";
 import DataTable from "./DataTable";
+import Snackbar from "./Snackbar";
 
 const styles = {
   paper: {
@@ -43,17 +44,31 @@ const fetchRows = async dispatch => {
 const CsvExport = ({ classes }) => {
   const { state, dispatch } = useContext(Store);
   let { columns, rows } = state.customer;
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackVariant, setSnackVariant] = useState("");
+  const [snackMessage, setSnackMessage] = useState("");
 
   useEffect(() => {
     fetchRows(dispatch);
   }, [true]);
 
-  const exportCsv = () => {
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/csv-export");
+  const exportCsv = async () => {
+    const { data } = await axios.post(process.env.REACT_APP_BACKEND_URL + "/csv-export");
+    if (data.success) {
+      setSnackVariant("success");
+      setSnackMessage(data.success);
+    } else {
+      setSnackVariant("error");
+      setSnackMessage(data.error);
+    }
+    setSnackOpen(true);
   };
+  
+  const closeSnack = () => setSnackOpen(false);
 
   return (
     <Grid container justify="center">
+      <Snackbar open={snackOpen} handleClose={closeSnack} variant={snackVariant} message={snackMessage} />
       <Grid item>
         <Typography gutterBottom variant="headline" align="center">
           Export Customer Data{" "}
