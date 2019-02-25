@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { Switch, Route } from "react-router";
 import { Store } from "../state/store";
 import Navbar from "./Navbar";
@@ -8,8 +9,29 @@ import BillingTreeLatest from "./BillingTreeLatest";
 import CsvExport from "./CsvExport";
 import Login from "./Login";
 
+axios.defaults.withCredentials = true;
+
 const App = () => {
-  const { state } = useContext(Store);
+  const { state, dispatch } = useContext(Store);
+  const [loading, setLoading] = useState(false);
+
+  const checkLoginStatus = async () => {
+    setLoading(true);
+    const { data } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/auth/profile");
+    if (data.username) {
+      dispatch({ username: data.username });
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    checkLoginStatus()
+  }, [true]); 
+
+  if (loading) {
+    return null;
+  }
+
   if (state.username) {
     return (
       <div>

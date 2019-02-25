@@ -11,6 +11,11 @@ router.get("/logout", (req, res) => {
   req.logOut();
 });
 
+router.get("/profile", (req, res) => {
+  console.log("profile", req.user);
+  res.json(req.user);
+});
+
 router.post("/adduser", async (req, res) => {
   const { username, password } = req.body;
   if (req.header("Authorization") == process.env.ADMIN_TOKEN) {
