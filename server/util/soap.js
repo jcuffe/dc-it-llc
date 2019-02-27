@@ -69,12 +69,14 @@ const validateTransaction = (client, tx) => {
       } else {
         try {
           const response = result.searchTransactionsReturn.Transactions.item;
-          const txs = response.map(tx => tx.Response.Result.$value);
-          if (txs.includes("Approved")) {
-            // TODO resolve with the refnum
-            resolve(true);
-          } else {
-            resolve(null);
+          if (response) {
+            const txs = response.map(tx => tx.Response.Result.$value);
+            if (txs.includes("Approved")) {
+              // TODO resolve with the refnum
+              resolve(true);
+            } else {
+              resolve(null);
+            }
           }
         } catch (err) {
           console.log(err);
