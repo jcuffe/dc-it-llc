@@ -50,10 +50,10 @@ const CSG = () => {
   const { state, dispatch } = useContext(Store);
 
   // Move a row into the processing queue
-  const onRowClick = ({ index, rowData }) => {
+  const onRowClick = ({ rowData }) => {
     const { selectedRows, rows, filteredRows } = state;
     selectedRows.push(rowData);
-    const spliceIndex = rows.find(row => row.id === filteredRows[index].id);
+    const spliceIndex = rows.findIndex(row => row.id === rowData.id);
     rows.splice(spliceIndex, 1);
     dispatch({ selectedRows, rows });
   };
@@ -71,6 +71,7 @@ const CSG = () => {
 
   // Apply filter query to row data
   useEffect(() => {
+    console.log("applying filter");
     const { filterText, filterBy, rows } = state;
     if (filterText !== "") {
       const filteredRows = rows.filter(row =>
