@@ -21,7 +21,7 @@ router.get("/processed", async (req, res) => {
 
 router.post("/process", async (req, res) => {
   // TODO choose processing library based on user data
-  const processorStr = req.user.processor || "billingTree";
+  const processorStr = req.user.processor || "singularBillPay";
   const processor = processors[processorStr];
 
   console.log("Processing payments");
