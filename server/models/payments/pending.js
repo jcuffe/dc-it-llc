@@ -24,6 +24,29 @@ const all = async () => {
   return payments;
 };
 
+const withIds = async (ids) => {
+  let payments = [];
+  try {
+    payments = await db("payments")
+      .whereIn("id", ids)
+      .select(
+        "id",
+        "filenumber as FileNo",
+        "debtorname as Debtor Name",
+        "cardnumber as Card Number",
+        "cardexpirationmonth as Expiration Month",
+        "cardexpirationyear as Expiration Year",
+        "threedigitnumber as CVV",
+        "cardaddress as Address",
+        "cardzipcode as Zip Code",
+        "paymentamount as Amount"
+      );
+  } catch(err) {
+    console.log(err);
+  }
+  return payments;
+}
+
 const unprocessed = async () => {
   const payments = await all();
   const processed = await Processed.ids();
@@ -33,4 +56,4 @@ const unprocessed = async () => {
   return rows;
 };
 
-module.exports = { all, unprocessed };
+module.exports = { all, unprocessed, withIds };

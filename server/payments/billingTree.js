@@ -1,6 +1,7 @@
 const soap = require("soap");
 const crypto = require("crypto");
 const Processed = require("../models/payments/processed");
+const Pending = require("../models/payments/pending");
 
 const wsdl = "https://sandbox.usaepay.com/soap/gate/E101690F/usaepay.wsdl";
 
@@ -14,8 +15,11 @@ const validateTransactions = async client => {
   // delete rows of unsuccessful transactions
 };
 
-const batchTransactions = async (client, transactions) => {
-  console.log(`Batching ${transactions.length} transactions`);
+const batchTransactions = async (client, ids) => {
+  console.log(`Batching ${ids.length} transactions`);
+  console.log(`Fetching transactions...`);
+  const transactions = await Pending.withIds(ids);
+  console.log(transactions);
   const responses = await Promise.all(
     transactions.map(async (tx, i) => {
       let result;
