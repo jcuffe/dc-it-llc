@@ -21,7 +21,7 @@ const fetchRows = async dispatch => {
   console.log("Fetching rows");
   const {
     data: { rows }
-  } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/customers");
+  } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/export/customers");
 
   console.log(rows);
   const columns = Object.keys(rows[0]).map((key, i) => {
@@ -53,7 +53,7 @@ const CsvExport = ({ classes }) => {
   }, [true]);
 
   const exportCsv = async () => {
-    const { data } = await axios.post(process.env.REACT_APP_BACKEND_URL + "/csv-export");
+    const { data } = await axios.post(process.env.REACT_APP_BACKEND_URL + "/export");
     if (data.success) {
       setSnackVariant("success");
       setSnackMessage(data.success);

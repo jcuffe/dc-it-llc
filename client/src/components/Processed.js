@@ -12,7 +12,7 @@ const fetchRows = async dispatch => {
   console.log("Fetching rows");
   const {
     data: { rows }
-  } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/processed");
+  } = await axios.get(process.env.REACT_APP_BACKEND_URL + "/payments/processed");
 
   rows.forEach(
     row =>

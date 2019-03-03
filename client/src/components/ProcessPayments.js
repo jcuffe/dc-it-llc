@@ -22,7 +22,7 @@ const paperStyle = { height: "35vh", width: 1270, paddingTop: 10 };
 
 const fetchRows = async dispatch => {
   const { data } = await axios.get(
-    process.env.REACT_APP_BACKEND_URL + "/payments"
+    process.env.REACT_APP_BACKEND_URL + "/payments/pending"
   );
 
   const columns = Object.keys(data.rows[0]).map((key, i) => {
@@ -40,7 +40,7 @@ const fetchRows = async dispatch => {
 
 const sendTransactions = async transactions => {
   const { data } = await axios.post(
-    process.env.REACT_APP_BACKEND_URL + "/process",
+    process.env.REACT_APP_BACKEND_URL + "/payments/process",
     transactions
   );
   return data;
