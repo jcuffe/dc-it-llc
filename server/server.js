@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const db = require("./util/knex");
-const { getSoapClient, DCITReport, batchTransactions } = require("./util/soap");
+const processors = require("./payments/processors");
 const { sftp, sftpOptions } = require("./util/sftp");
 const o2csv = require("objects-to-csv");
 const moment = require("moment");
@@ -77,9 +77,15 @@ server.get("/processed", async (req, res) => {
 });
 
 server.post("/process", async (req, res) => {
-  const client = await getSoapClient();
+  // TODO choose processing library based on user data
+  const processorStr = req.user.processor || "billingTree";
+  const processor = processors[processorStr];
+  console.log("Processing payments");
+  console.log(`Client processor: ${req.user.processor}`);
+  console.log("Pending payment IDS:", req.body);
+  const client = await processor.getClient();
   const transactions = req.body;
-  const results = await batchTransactions(client, transactions);
+  const results = await processor.batchTransactions(client, transactions);
   return res.json(results);
 });
 

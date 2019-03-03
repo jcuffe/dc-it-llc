@@ -1,5 +1,5 @@
-const db = require("../../util/knex");
-const Processed = require("./processed.js");
+const db = require("../../data/payments");
+const Processed = require("./processed");
 
 const all = async () => {
   let payments = [];

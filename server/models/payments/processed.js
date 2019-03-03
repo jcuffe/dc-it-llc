@@ -1,4 +1,4 @@
-const db = require("../../util/knex");
+const db = require("../../data/payments");
 
 const all = async () => {
   // TODO catch

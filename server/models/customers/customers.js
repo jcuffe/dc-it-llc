@@ -1,4 +1,4 @@
-const db = require("../../util/knex.js");
+const db = require("../../data/payments");
 
 const all = async () => {
   const rows = await db("dbase")

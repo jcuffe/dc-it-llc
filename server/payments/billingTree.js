@@ -4,7 +4,7 @@ const Processed = require("../models/payments/processed");
 
 const wsdl = "https://sandbox.usaepay.com/soap/gate/E101690F/usaepay.wsdl";
 
-const getSoapClient = async () => soap.createClientAsync(wsdl);
+const getClient = async () => soap.createClientAsync(wsdl);
 
 const validateTransactions = async client => {
   // load all transactions from processed table with missing refnum
@@ -176,7 +176,7 @@ const generateToken = () => {
 };
 
 module.exports = {
-  getSoapClient,
+  getClient,
   DCITReport,
   batchTransactions,
   validateTransaction

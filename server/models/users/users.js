@@ -1,4 +1,4 @@
-const db = require("../../util/userdb");
+const db = require("../../data/users");
 const bcrypt = require("bcrypt");
 
 const create = async (username, password) => {
