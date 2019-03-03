@@ -28,7 +28,8 @@
     "passport-local": "^1.0.0",
     "pg": "^7.8.1",
     "soap": "^0.25.0",
-    "ssh2-sftp-client": "^2.4.3"
+    "ssh2-sftp-client": "^2.4.3",
+    "swagger-client": "^3.8.25"
   },
   "devDependencies": {
     "dotenv": "^6.2.0"
