@@ -37,7 +37,7 @@ const Navbar = ({ classes }) => (
       </Typography>
       <Typography variant="h6">
         <Link to="/latest-response" className={classes.navItem}>
-          Latest BillingTree Response
+          Latest Processor Response
         </Link>
       </Typography>
       <Typography variant="h6">
